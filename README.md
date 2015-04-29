@@ -69,4 +69,4 @@ For a more flexible solution consider using a DNS name for the master (control s
 `6.` Teach the nodes (not the master) to trust eachother as root by copying (first generating if necessary) root's public key on each node into all other nodes' `/root/.ssh/authorized_keys` file.
 This is only necessary for the ZFS backend since it uses SSH for peer-to-peer data migration.
 
-`7.` You should now be able to make volume and container API requests to the master on port 80 according to https://docs.clusterhq.com/en/0.4.0/advanced/api.html
+`7.` You should now be able to make volume and container API requests to the master on port 4523 according to https://docs.clusterhq.com/en/0.4.0/advanced/api.html
