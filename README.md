@@ -33,11 +33,12 @@ NODE_IPS="1.2.3.101 1.2.3.102"
 
 Note that when referring to "nodes" throughout the rest of this document we are *not* referring to the master.
 
-2. Log into the each of the nodes (both master and nodes) and run:
+2. Log into the master and each of the nodes and run:
 
 ```
-ssh -i ${KEYPAIR_LOCATION} centos@NODE_IP
-git clone https://github.com/clusterhq/flocker-install-scripts
+NODE_IP=...
+ssh -i ${KEYPAIR_LOCATION} centos@${NODE_IP}
+git clone https://github.com/lukemarsden/flocker-install-scripts
 cd flocker-install-scripts
 sudo ./stage1.sh
 ```
