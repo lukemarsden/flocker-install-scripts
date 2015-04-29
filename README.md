@@ -1,5 +1,7 @@
 # Flocker quick install for OpenStack
 
+**NOT OFFICIALLY SUPPORTED - if this breaks you get to keep both pieces.**
+
 This repo contains some install scripts that can help you get started with an API-based flocker deployment on CentOS 7 quickly.
 
 This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#centos-7-install
