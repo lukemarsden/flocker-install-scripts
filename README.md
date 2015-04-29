@@ -4,7 +4,7 @@
 
 This repo contains some install scripts that can help you get started with an API-based flocker deployment on CentOS 7 quickly.
 
-This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#centos-7-install
+This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#installing-on-centos-7
 
 ## Install steps:
 
