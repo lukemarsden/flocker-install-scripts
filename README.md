@@ -51,7 +51,11 @@ sudo ./master.sh
 4. Log into the each of the nodes in turn and run:
 
 ```
-ssh -i ${KEYPAIR_LOCATION} centos@NODE_IP
+NODE_IP=...
+ssh -i ${KEYPAIR_LOCATION} centos@${NODE_IP}
 cd flocker-install-scripts
-sudo ./node.sh
+sudo ./node.sh $NODE_IP $MASTER_IP
 ```
+
+Note that this permanently configures the nodes so they know where to talk to the master.
+For a more flexible solution consider using a DNS name for the master (control service) node.
