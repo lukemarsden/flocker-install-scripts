@@ -38,6 +38,7 @@ Note that when referring to "nodes" throughout the rest of this document we are 
 ```
 NODE_IP=...
 ssh -i ${KEYPAIR_LOCATION} centos@${NODE_IP}
+sudo yum install git
 git clone https://github.com/lukemarsden/flocker-install-scripts
 cd flocker-install-scripts
 sudo ./stage1.sh
