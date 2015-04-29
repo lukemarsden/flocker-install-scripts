@@ -25,5 +25,3 @@ EOF
 
 systemctl enable flocker-agent
 systemctl start flocker-agent
-systemctl enable flocker-container-agent
-systemctl start flocker-container-agent
