@@ -29,6 +29,8 @@ MASTER_IP="1.2.3.100"
 NODE_IPS="1.2.3.101 1.2.3.102"
 ```
 
+Note that when referring to "nodes" throughout the rest of this document we are *not* referring to the master.
+
 2. Log into the each of the nodes (both master and nodes) and run:
 
 ```
@@ -59,3 +61,8 @@ sudo ./node.sh $NODE_IP $MASTER_IP
 
 Note that this permanently configures the nodes so they know where to talk to the master.
 For a more flexible solution consider using a DNS name for the master (control service) node.
+
+5. Teach the nodes (not the master) to trust eachother as root by copying (first generating if necessary) root's public key on each node into all other nodes' `/root/.ssh/authorized_keys` file.
+This is only necessary for the ZFS backend since it uses SSH for peer-to-peer data migration.
+
+6. You should now be able to make volume and container API requests to the master on port 80 according to https://docs.clusterhq.com/en/0.4.0/advanced/api.html
