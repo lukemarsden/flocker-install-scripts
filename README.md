@@ -96,7 +96,7 @@ As a warm-up exercise, here's a demo of using `curl` to provision a simple state
 $ MASTER_IP=1.2.3.100
 $ NODE_IP=1.2.3.101 # pick a node to create the container on
 $ curl -XPOST -d '{"host": "'${NODE_IP}'", "name": "webserver", "image": "nginx:latest"}' \
-  --header "Content-type: application/json" http://${MASTER_IP}/v1/configuration/containers
+  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers
 ```
 
 Now can now log into `$NODE_IP` via SSH and watch the image being downloaded (e.g. using `top`, `bmon`, `docker images`). Note that this can take some time, depending on the image you chose, your internet connection and other factors.
@@ -104,7 +104,7 @@ Now can now log into `$NODE_IP` via SSH and watch the image being downloaded (e.
 Once the image is downloaded, Flocker's container control service will automatically start the container on the specified host. Let's go see it show up in the desired state:
 
 ```
-$ curl http://${MASTER_IP}/v1/state/containers
+$ curl http://${MASTER_IP}:4523/v1/state/containers
 [...]
 ```
 
@@ -118,12 +118,12 @@ OK, we've done the warm-up exercise. Time to move a stateful container between h
 
 ```
 $ curl -XPOST -d '{"primary": "'${NODE_IP}'", {"metadata": {"name": "redis_data"}}' \
-  --header "Content-type: application/json" http://${MASTER_IP}/v1/configuration/datasets
+  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/datasets
 ```
 
 Now let's poll the state of the cluster until the volume shows up:
 ```
-$ curl http://${MASTER_IP}/v1/state/datasets
+$ curl http://${MASTER_IP}:4523/v1/state/datasets
 [...]
 ```
 
@@ -148,14 +148,14 @@ Let's start a Redis container with the volume. We'll also expose the port so we 
 $ curl -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "dockerfile/nginx:latest", ' \
   '"ports": [{"internal": 6379, "external": 6379}],' \
   '"volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' \
-  --header "Content-type: application/json" http://${MASTER_IP}/v1/configuration/containers
+  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers
 {...}
 ```
 
 Now poll the state of the cluster and we'll see the container show up...
 
 ```
-$ curl http://${MASTER_IP}/v1/state/containers
+$ curl http://${MASTER_IP}:4523/v1/state/containers
 [...]
 ```
 
@@ -179,7 +179,7 @@ Now we can update the host of the container and Flocker will magically 2-phase-p
 
 ```
 $ curl -XPOST -d '{"host": "'${NODE_IP}'"
-  --header "Content-type: application/json" http://${MASTER_IP}/v1/configuration/containers/redis
+  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers/redis
 {...}
 ```
 
@@ -193,7 +193,7 @@ $ echo "NODE 1:" && ssh ${NODE_IP_1} docker ps && \
 You can also poll the control service to see the container's host change:
 
 ```
-$ curl http://${MASTER_IP}/v1/state/containers
+$ curl http://${MASTER_IP}:4523/v1/state/containers
 ```
 
 As an exercise for the reader, why not find out what happens when you try to migrate a 1GB PostgreSQL database? Watch the output of `zfs list` and observe the small amount of downtime in the database...
