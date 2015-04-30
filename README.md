@@ -188,7 +188,7 @@ node2$ exit
 Now we can update the host of the container and Flocker will magically push the container to the second host... we can do this just by referencing the container's name and changing the host.
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP_2}'}" \
+$ curl -s -XPOST -d '{"host": "'${NODE_IP_2}'}"' \
   --header "Content-type: application/json" \
   http://${MASTER_IP}:4523/v1/configuration/containers/mongodb | jq .
 {...}
