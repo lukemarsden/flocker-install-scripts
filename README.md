@@ -1,9 +1,12 @@
-# Moving a stateful Docker container between hosts with just Flocker and `curl`
-## Flocker 0.4 API demo on CentOS 7
+# Moving a database in Docker with Flocker and `curl`
 
 **NOT OFFICIALLY SUPPORTED - if this breaks you get to keep both pieces.**
 
+## Flocker 0.4 API demo on CentOS 7
+
 This repo contains some install scripts that can help you get started with an API-based flocker deployment on CentOS 7 quickly using our alpha-quality ZFS backend.
+
+## Background
 
 At ClusterHQ, we have been working hard at integrating Flocker's volume management capabilities with common orchestration frameworks such as Swarm and Kubernetes (Mesos/Marathon coming soon) via the upcoming Docker plugins project.
 
