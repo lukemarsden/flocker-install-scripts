@@ -147,7 +147,8 @@ Let's start a MongoDB container with the volume. We'll also expose the port so w
 
 ```
 $ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "mongodb", "image": "clusterhq/mongodb:latest", "ports": [{"internal": 27017, "external": 27017}], "volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' \
-  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
+  --header "Content-type: application/json" \
+  http://${MASTER_IP}:4523/v1/configuration/containers | jq .
 {...}
 ```
 
