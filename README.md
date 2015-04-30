@@ -209,6 +209,15 @@ You can also poll the control service to see the container's host change:
 $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 ```
 
+Now reconnect to Redis and verify that the data has moved along with the container!
+
+```
+$ redis-cli ${NODE_IP_1}
+redis> set hello world
+redis> get hello
+world
+```
+
 As an exercise for the reader, why not find out what happens when you try to migrate a 1GB PostgreSQL database? Watch the output of `zfs list` and observe the small amount of downtime at the end of the database migration...
 
 What did you think of this demo? Let us know in the comments, on IRC on #clusterhq on Freenode, or on Hacker News...
