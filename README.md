@@ -10,7 +10,7 @@ This repo contains some install scripts that can help you get started with an AP
 
 At ClusterHQ, we have been working hard at integrating Flocker's volume management capabilities with common orchestration frameworks such as Swarm and Kubernetes (Mesos/Marathon coming soon) via the upcoming Docker plugins project.
 
-Some features of Flocker aren't easy to integrate with these frameworks, however, such as 2-phase push, because it requires the orchestration framework saying "I'm going to want to move this container over there, please pre-replicate the data". So, we have been working on a minimal orchestration framework of our own: **just enough orchestration** to demo these cool data features. We hope to integrate these advanced data features into other orchestration frameworks in due course.
+However, some features of Flocker aren't easy to integrate into these frameworks. So we have been working on an extremely minimal orchestration framework of our own: **just enough orchestration** to demo our cool data features. This orchestration framework also exposes a REST API which I'm going to show you today.
 
 This document shows you how to kick the tyres and use our volumes API and containers API together to create a volume, attach it to a container, and then move that container along with its volume between hosts with minimal downtime using 2-phase push -- all just using `curl`!
 
@@ -162,14 +162,18 @@ $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 [...]
 ```
 
-We can now connect to either IP address of the container hosts and insert some data into MongoDB:
+We can now connect to either IP address of the container hosts and insert some data into MongoDB.
+We'll take the unusual step of installing mongodb on the master, just so we have easy access to the mongo client:
 
 ```
-$ mongodb-cli ${NODE_IP_1}
-mongodb> set hello world
-mongodb> get hello
-world
-mongodb> save
+$ ssh centos@${MASTER_IP}
+master$ sudo yum install mongodb
+master$ mongo ${NODE_IP_1}
+> use example;
+switched to db example
+> db.records.insert({"flocker": "tested"})
+> db.records.find({})
+{ "_id" : ObjectId("53c958e8e571d2046d9b9df9"), "flocker" : "tested" }
 ```
 
 You can log into the hosts and run `docker ps` to verify that the container is running on host 1:
@@ -214,9 +218,13 @@ $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 Now reconnect to MongoDB and verify that the data has moved along with the container!
 
 ```
-$ mongodb-cli ${NODE_IP_1}
-mongodb> get hello
-world
+$ ssh centos@${MASTER_IP}
+master$ sudo yum install mongodb
+master$ mongo ${NODE_IP_1}
+> use example;
+switched to db example
+> db.records.find({})
+{ "_id" : ObjectId("53c958e8e571d2046d9b9df9"), "flocker" : "tested" }
 ```
 
-As an exercise for the reader, why not find out what happens when you try to migrate a 1GB PostgreSQL database? Watch the output of `zfs list` and observe the small amount of downtime at the end of the database migration...
+We moved a stateful container using just Flocker and `curl`!
