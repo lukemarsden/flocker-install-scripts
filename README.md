@@ -115,7 +115,7 @@ You should get a non-empty list from the control service by the time the contain
 OK, we've done the warm-up exercise. Time to move a stateful container between hosts! First step here is creating a dataset using the Flocker datasets API. We'll give it some metadata, a "name" in case we want to remember later why we created it:
 
 ```
-$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_data"}}' \
+$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_data2"}}' \
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/datasets | jq .
 ```
 
@@ -149,10 +149,7 @@ node1$ exit
 Let's start a Redis container with the volume. We'll also expose the port so we can connect to it:
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "redis:latest", ' \
-  '"ports": [{"internal": 6379, "external": 6379}],' \
-  '"volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' \
-  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
+$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "redis:latest", "ports": [{"internal": 6379, "external": 6379}], "volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
 {...}
 ```
 
