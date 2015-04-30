@@ -141,9 +141,9 @@ node1$ sudo docker pull redis:latest
 [...]
 node1$ exit
 $ ssh centos@${NODE_IP_2}
-node1$ sudo docker pull redis:latest
+node2$ sudo docker pull redis:latest
 [...]
-node1$ exit
+node2$ exit
 ```
 
 Let's start a Redis container with the volume. We'll also expose the port so we can connect to it:
@@ -172,23 +172,35 @@ redis> save
 
 You can log into the hosts and run `docker ps` to verify that the container is running on host 1:
 ```
-$ echo "NODE 1:" && ssh ${NODE_IP_1} docker ps && \
-  echo "NODE 2:" && ssh ${NODE_IP_2} docker ps
+$ ssh centos@${NODE_IP_1}
+node1$ sudo docker ps
+[...]
+node1$ exit
+$ ssh centos@${NODE_IP_2}
+node2$ sudo docker ps
+[...]
+node2$ exit
 ```
 
-Now we can update the host of the container and Flocker will magically 2-phase-push the container to the second host... we can do this just by referencing the container's name and changing the host.
+Now we can update the host of the container and Flocker will magically push the container to the second host... we can do this just by referencing the container's name and changing the host.
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP}'"
+$ curl -s -XPOST -d '{"host": "'${NODE_IP}'}"
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers/redis | jq .
 {...}
 ```
 
-You can now watch as the container gets moved to the new host:
+You can now log in to verify the that the container is moved to the new host:
 
 ```
-$ echo "NODE 1:" && ssh ${NODE_IP_1} docker ps && \
-  echo "NODE 2:" && ssh ${NODE_IP_2} docker ps
+$ ssh centos@${NODE_IP_1}
+node1$ sudo docker ps
+[...]
+node1$ exit
+$ ssh centos@${NODE_IP_2}
+node2$ sudo docker ps
+[...]
+node2$ exit
 ```
 
 You can also poll the control service to see the container's host change:
@@ -197,6 +209,6 @@ You can also poll the control service to see the container's host change:
 $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 ```
 
-As an exercise for the reader, why not find out what happens when you try to migrate a 1GB PostgreSQL database? Watch the output of `zfs list` and observe the small amount of downtime in the database...
+As an exercise for the reader, why not find out what happens when you try to migrate a 1GB PostgreSQL database? Watch the output of `zfs list` and observe the small amount of downtime at the end of the database migration...
 
 What did you think of this demo? Let us know in the comments, on IRC on #clusterhq on Freenode, or on Hacker News...
