@@ -115,7 +115,7 @@ You should get a non-empty list from the control service by the time the contain
 OK, we've done the warm-up exercise. Time to move a stateful container between hosts! First step here is creating a dataset using the Flocker datasets API. We'll give it some metadata, a "name" in case we want to remember later why we created it:
 
 ```
-$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_data"}}' \
+$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "mongodb_data"}}' \
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/datasets | jq .
 ```
 
@@ -137,21 +137,23 @@ To make the rest of the demo quick, let's go and pre-fetch the image we're going
 $ NODE_IP_1=1.2.3.101
 $ NODE_IP_2=1.2.3.102
 $ ssh centos@${NODE_IP_1}
-node1$ sudo docker pull redis:latest
+node1$ sudo docker pull clusterhq/mongodb:latest
 [...]
 node1$ exit
 $ ssh centos@${NODE_IP_2}
-node2$ sudo docker pull redis:latest
+node2$ sudo docker pull clusterhq/mongodb:latest
 [...]
 node2$ exit
 ```
 
-Let's start a Redis container with the volume. We'll also expose the port so we can connect to it:
+Let's start a MongoDB container with the volume. We'll also expose the port so we can connect to it:
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "redis:latest", "ports": [{"internal": 6379, "external": 6379}], "volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
+$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "mongodb", "image": "clusterhq/mongodb:latest", "ports": [{"internal": 27017, "external": 27017}], "volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
 {...}
 ```
+
+**NB: Due to https://clusterhq.atlassian.net/browse/FLOC-1174 the image chosen must not have any environment variables set in the image. This bug is fixed in master but not yet in a stable release of Flocker.**
 
 Now poll the state of the cluster and we'll see the container show up...
 
@@ -160,14 +162,14 @@ $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 [...]
 ```
 
-We can now connect to either IP address of the container hosts and insert some data into Redis:
+We can now connect to either IP address of the container hosts and insert some data into MongoDB:
 
 ```
-$ redis-cli ${NODE_IP_1}
-redis> set hello world
-redis> get hello
+$ mongodb-cli ${NODE_IP_1}
+mongodb> set hello world
+mongodb> get hello
 world
-redis> save
+mongodb> save
 ```
 
 You can log into the hosts and run `docker ps` to verify that the container is running on host 1:
@@ -186,7 +188,7 @@ Now we can update the host of the container and Flocker will magically push the 
 
 ```
 $ curl -s -XPOST -d '{"host": "'${NODE_IP}'}"
-  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers/redis | jq .
+  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers/mongodb | jq .
 {...}
 ```
 
@@ -209,12 +211,12 @@ You can also poll the control service to see the container's host change:
 $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 ```
 
-Now reconnect to Redis and verify that the data has moved along with the container!
+Now reconnect to MongoDB and verify that the data has moved along with the container!
 
 ```
-$ redis-cli ${NODE_IP_1}
-redis> set hello world
-redis> get hello
+$ mongodb-cli ${NODE_IP_1}
+mongodb> set hello world
+mongodb> get hello
 world
 ```
 
