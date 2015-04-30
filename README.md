@@ -119,7 +119,7 @@ $ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_dat
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/datasets | jq .
 ```
 
-Now let's poll the state of the cluster until the volume shows up:
+Now let's poll the datasets state of the cluster until the volume shows up:
 ```
 $ curl -s http://${MASTER_IP}:4523/v1/state/datasets | jq .
 [...]
