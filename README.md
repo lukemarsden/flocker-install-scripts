@@ -90,7 +90,7 @@ This is only necessary for the ZFS backend since it uses SSH for peer-to-peer da
 
 Note that the API in 0.4 has no authentication, authorization or secrecy. If you expose the control service publicly, anyone on the internet will be able to spin up privileged containers on your hosts. Be careful to use this in private environments! We are working on adding TLS to the API...
 
-As a warm-up exercise, here's a demo of using `curl` to provision a simple stateless container on a host. We do this by modifying the configuration (*desired state*) and then polling the actual *state*:
+As a warm-up exercise, here's a demo of using `curl` to provision a simple stateless container on a host. We do this by modifying the configuration (*desired state*) and then polling the actual *state* while we wait for the image to download:
 
 ```
 $ MASTER_IP=1.2.3.100
@@ -99,16 +99,14 @@ $ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "webserver", "image": "ngi
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
 ```
 
-Now can now log into `$NODE_IP` via SSH and watch the image being downloaded (e.g. using `top`, `bmon`, `docker images`). Note that this can take some time, depending on the image you chose, your internet connection and other factors.
+Now can now log into `$NODE_IP` via SSH and watch the image being downloaded (e.g. using `top`, `bmon`, `docker images`). Note that this can take some time, depending on the image you chose, your internet connection and other factors. Be patient!
 
-Once the image is downloaded, Flocker's container control service will automatically start the container on the specified host. Let's go see it show up in the desired state:
+Once the image is downloaded on the target node, Flocker's container control service will automatically start the container on the specified host and report this back via the containers state endpoint. Let's see it show up in the desired state:
 
 ```
 $ curl -s http://${MASTER_IP}:4523/v1/state/containers | jq .
 [...]
 ```
-
-(pipe this into `jq .` if you have it installed)
 
 You should get a non-empty list from the control service by the time the container is started on the host.
 
