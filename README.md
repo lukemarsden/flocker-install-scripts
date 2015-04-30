@@ -136,8 +136,14 @@ To make the rest of the demo quick, let's go and pre-fetch the image we're going
 ```
 $ NODE_IP_1=1.2.3.101
 $ NODE_IP_2=1.2.3.102
-$ ssh centos@NODE_IP_1 docker pull dockerfile/redis & \
-  ssh centos@NODE_IP_2 docker pull dockerfile/redis
+$ ssh centos@${NODE_IP_1}
+node1$ sudo docker pull dockerfile/redis
+[...]
+node1$ exit
+$ ssh centos@${NODE_IP_2}
+node1$ sudo docker pull dockerfile/redis
+[...]
+node1$ exit
 ```
 
 Let's start a Redis container with the volume. We'll also expose the port so we can connect to it:
