@@ -16,10 +16,7 @@ This document shows you how to kick the tyres and use our volumes API and contai
 
 This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#installing-on-centos-7
 
-## Big picture architecture
-[insert architecture diagram here]
-
-## Install steps:
+## Install steps
 
 `1.` Provision some VMs. One master for the control service and several agent nodes for user containers. For example on OpenStack you could run:
 
@@ -86,9 +83,9 @@ This is only necessary for the ZFS backend since it uses SSH for peer-to-peer da
 
 `7.` You should now be able to make volume and container API requests to the master on port 4523 according to https://docs.clusterhq.com/en/0.4.0/advanced/api.html
 
-`8.` **Bonus section!**
+## Demo time!
 
-Note that the API in 0.4 has no authentication, authorization or secrecy. If you expose the control service publicly, anyone on the internet will be able to spin up privileged containers on your hosts. Be careful to use this in private environments! We are working on adding TLS to the API...
+**Warning:** Note that the API in 0.4 has no authentication, authorization or secrecy. If you expose the control service publicly, anyone on the internet will be able to spin up privileged containers on your hosts. Be careful to use this in private environments! We are working on adding TLS to the API...
 
 As a warm-up exercise, here's a demo of using `curl` to provision a simple stateless container on a host. We do this by modifying the configuration (*desired state*) and then polling the actual *state* while we wait for the image to download:
 
