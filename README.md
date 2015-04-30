@@ -152,8 +152,6 @@ $ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "mongodb", "image": "clust
 {...}
 ```
 
-**NB: Due to https://clusterhq.atlassian.net/browse/FLOC-1174 the image chosen must not have any environment variables set in the image. This bug is fixed in master but not yet in a stable release of Flocker.**
-
 Now poll the state of the cluster and we'll see the container show up...
 
 ```
@@ -190,8 +188,9 @@ node2$ exit
 Now we can update the host of the container and Flocker will magically push the container to the second host... we can do this just by referencing the container's name and changing the host.
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP}'}"
-  --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers/mongodb | jq .
+$ curl -s -XPOST -d '{"host": "'${NODE_IP_2}'}" \
+  --header "Content-type: application/json" \
+  http://${MASTER_IP}:4523/v1/configuration/containers/mongodb | jq .
 {...}
 ```
 
