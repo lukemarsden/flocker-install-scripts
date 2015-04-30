@@ -7,7 +7,7 @@ yum install -y https://s3.amazonaws.com/clusterhq-archive/centos/clusterhq-relea
 yum install -y clusterhq-flocker-node
 
 if selinuxenabled; then setenforce 0; fi
-test -e /etc/selinux/config && sed --in-place='.preflocker' 's/^SELINUX=.*$/SELINUX=disabled/g' /etc/selinux/config
+test -e /etc/selinux/config && sed --in-place='.preflocker' 's/^SELINUX=.*$/SELINUX=permissive/g' /etc/selinux/config
 
 systemctl enable flocker-control
 systemctl start flocker-control

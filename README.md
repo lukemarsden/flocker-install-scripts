@@ -11,7 +11,7 @@ Some features of Flocker aren't easy to integrate with these frameworks, however
 
 This document shows you how to kick the tyres and use our volumes API and containers API together to create a volume, attach it to a container, and then move that container along with its volume between hosts with minimal downtime using 2-phase push -- all just using `curl`!
 
-This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#centos-7-install
+This doc is derived from https://docs.clusterhq.com/en/0.4.0/indepth/installation.html#installing-on-centos-7
 
 ## Big picture architecture
 [insert architecture diagram here]
