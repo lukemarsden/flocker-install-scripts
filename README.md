@@ -137,11 +137,11 @@ To make the rest of the demo quick, let's go and pre-fetch the image we're going
 $ NODE_IP_1=1.2.3.101
 $ NODE_IP_2=1.2.3.102
 $ ssh centos@${NODE_IP_1}
-node1$ sudo docker pull dockerfile/redis
+node1$ sudo docker pull redis:latest
 [...]
 node1$ exit
 $ ssh centos@${NODE_IP_2}
-node1$ sudo docker pull dockerfile/redis
+node1$ sudo docker pull redis:latest
 [...]
 node1$ exit
 ```
@@ -149,7 +149,7 @@ node1$ exit
 Let's start a Redis container with the volume. We'll also expose the port so we can connect to it:
 
 ```
-$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "dockerfile/nginx:latest", ' \
+$ curl -s -XPOST -d '{"host": "'${NODE_IP}'", "name": "redis", "image": "nginx:latest", ' \
   '"ports": [{"internal": 6379, "external": 6379}],' \
   '"volumes": [{"dataset_id": "'${DATASET_ID}'", "mountpoint": "/data"}]}' \
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/containers | jq .
