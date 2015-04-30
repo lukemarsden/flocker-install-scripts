@@ -213,7 +213,6 @@ Now reconnect to Redis and verify that the data has moved along with the contain
 
 ```
 $ redis-cli ${NODE_IP_1}
-redis> set hello world
 redis> get hello
 world
 ```
