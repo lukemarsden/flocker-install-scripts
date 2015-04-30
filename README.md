@@ -215,7 +215,6 @@ Now reconnect to MongoDB and verify that the data has moved along with the conta
 
 ```
 $ mongodb-cli ${NODE_IP_1}
-mongodb> set hello world
 mongodb> get hello
 world
 ```
