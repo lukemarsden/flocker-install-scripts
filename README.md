@@ -115,7 +115,7 @@ You should get a non-empty list from the control service by the time the contain
 OK, we've done the warm-up exercise. Time to move a stateful container between hosts! First step here is creating a dataset using the Flocker datasets API. We'll give it some metadata, a "name" in case we want to remember later why we created it:
 
 ```
-$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_data2"}}' \
+$ curl -s -XPOST -d '{"primary": "'${NODE_IP}'", "metadata": {"name": "redis_data"}}' \
   --header "Content-type: application/json" http://${MASTER_IP}:4523/v1/configuration/datasets | jq .
 ```
 
